@@ -99,7 +99,8 @@ public class main extends JavaPlugin implements Listener  {
         				
         				player.setDisplayName(senderName);
         				sender.sendMessage("You have removed your nickname");
-        					
+        				this.saveCustomConfig();
+        				
         			}else if (args[0] != sender.getName()){
         				
         				
