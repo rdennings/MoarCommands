@@ -1,0 +1,19 @@
+name: MoarCommands
+main: com.rdennings.bkplug.main
+version: 0.1a
+commands:
+   getworld:
+      description: Will return the name of the world you are in.
+      usage: /getworld
+      permission: MoarCommands.getworld
+      permission-message: You don't have <permission>
+   nick:
+      description: Change your nickname to that of your choice.
+      usage: /nick <DESIRED NICK>
+      permission: MoarCommands.nick
+      permission-message: You don't have <permission>
+   bannick:
+      description: Searches nickname database, then bans the user that the nickname belongs to.
+      usage: /bannick <nickname>
+      permission: MoarCommands.ban
+      permission-message: You don't have <permission>
