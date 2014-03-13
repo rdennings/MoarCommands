@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 
@@ -99,29 +100,40 @@ public boolean onCommand(CommandSender sender, Command cmd, String label, String
 				sender.sendMessage("You have removed your nickname");
 				getCustomConfig().set("nickname", null);
 				saveCustomConfig();
-			}else if (args[0] != sender.getName()){ //Makes sure a file is made, then writes the new nickname
-        		Player player = (Player) sender; //needed for setting display name, do not use sender.*()
+			}else{ //Makes sure a file is made, then writes the new nickname
+        		Player player = (Player) sender;
         		String senderName = player.getName();
         		userConfig = senderName;
+
         		player.setDisplayName(args[0]);
-        		String displayName = player.getDisplayName();
+        		String displayName = player.getDisplayName(); 
+        		
         		sender.sendMessage("your new name is: " + displayName);
         		sender.sendMessage(sender.getName() + ", " + args[0]);
-        		getCustomConfig().set("nickname", displayName);
-        		saveCustomConfig();   		
+        		this.getCustomConfig().set("nickname", displayName);
+        		this.saveCustomConfig();		
 			}
     		userConfig = null;
 		}
 		return true;
 	} else if (cmd.getName().equalsIgnoreCase("bannick")) { 
 		//this command will have an option in config.yml to disable
-		//for compatability with custom ban plugins that rely on logging.
+		//for comparability with custom ban plugins that rely on logging.
 		userConfig = args[0];
 		String banName = getCustomConfig().getString("nickname");
 		sender.sendMessage("You banned: " + banName);	
 		OfflinePlayer PLAYER_TO_BAN = Bukkit.getOfflinePlayer(banName);
 		PLAYER_TO_BAN.setBanned(true);
 		userConfig = null;
+		return true;
+	} else if (cmd.getName().equalsIgnoreCase("kill")) { 
+		String killName = args[0];
+		Player playerToKill = Bukkit.getPlayer(killName);
+		playerToKill.sendRawMessage("You have been killed by a waffle.");
+		Bukkit.getServer().broadcastMessage(ChatColor.BLUE + playerToKill.getName() + "GOT KILLED BY A WAFFLE!");
+		playerToKill.setHealth(0);
+		
+		
 		return true;
 	}
 	return false;

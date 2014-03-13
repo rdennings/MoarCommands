@@ -17,3 +17,8 @@ commands:
       usage: /bannick <nickname>
       permission: MoarCommands.ban
       permission-message: You don't have <permission>
+   kill:
+      description: Sends a waffle agent to kill the player.
+      usage: /kill <name>
+      permission: MoarCommands.kill
+      permission-message: You don't have <permission>
