@@ -23,18 +23,7 @@ import org.bukkit.OfflinePlayer;
 public class main extends JavaPlugin implements Listener  {
 	
 	
-	public String userConfig = null;
-	
-		/*
-	    @EventHandler
-	    public void onPlayerMove(PlayerMoveEvent event){
-	            Player player = event.getPlayer();
-	            Location playerLoc = player.getLocation();
-	            player.sendMessage("Your X Coordinates : " + playerLoc.getX());
-	            player.sendMessage("Your Y Coordinates : " + playerLoc.getY());
-	            player.sendMessage("Your Z Coordinates : " + playerLoc.getZ());
-	    }
-		*/
+	String userConfig = null;
 	    
         @Override
         public void onEnable(){
@@ -44,18 +33,28 @@ public class main extends JavaPlugin implements Listener  {
         	getServer().getPluginManager().registerEvents(new Listener() {
         		  @EventHandler
                 public void playerJoin(PlayerJoinEvent event) {
-                    // On player join send them the message from config.yml
-                  	String getName = event.getPlayer().getName();
-                	userConfig = getName;
+        			  
+                  	//String getName = event.getPlayer().getName();
+                	userConfig = event.getPlayer().getName();
                 	
         			String getNick = getCustomConfig().getString("nickname");
                 	if (getNick == null){
-                		getNick = getName;
+                		getNick = userConfig;
+                        saveCustomConfig();
+                	}else{
+
                 	}
             		getCustomConfig().set("nickname", getNick);
+                	
                     event.getPlayer().setDisplayName(getNick);
-                    Bukkit.getServer().broadcastMessage(getName + " has logged in with nickname " + getNick);
                     
+                    Bukkit.getServer().broadcastMessage(userConfig + " has logged in with nickname " + getNick);
+
+                    
+                    //Clear Variables for next person...
+                    //getName = null;
+                    userConfig = null;
+                    getNick = null;
                 }
             }, this);
         	//--------
@@ -95,14 +94,13 @@ public class main extends JavaPlugin implements Listener  {
                 		Player player = (Player) sender;
                 		String senderName = player.getName();
                 		
-        				this.getConfig().set("nicknames." + senderName, null);
-        				
+        				userConfig = senderName;
         				player.setDisplayName(senderName);
         				sender.sendMessage("You have removed your nickname");
-        				this.saveCustomConfig();
+        				getCustomConfig().set("nickname", null);
+        				saveCustomConfig();
         				
         			}else if (args[0] != sender.getName()){
-        				
         				
                 		Player player = (Player) sender;
                 		String senderName = player.getName();
@@ -113,10 +111,11 @@ public class main extends JavaPlugin implements Listener  {
                 		
                 		sender.sendMessage("your new name is: " + displayName);
                 		sender.sendMessage(sender.getName() + ", " + args[0]);
-                		this.getCustomConfig().set("nickname", displayName);
-                		this.saveCustomConfig();
+                		getCustomConfig().set("nickname", displayName);
+                		saveCustomConfig();
                 		
         			}
+            		userConfig = null;
         		}
         		
         		return true;
@@ -129,60 +128,58 @@ public class main extends JavaPlugin implements Listener  {
 				
 				OfflinePlayer PLAYER_TO_BAN = Bukkit.getOfflinePlayer(banName);
 				PLAYER_TO_BAN.setBanned(true);
-
+				userConfig = null;
 				return true;
 			}
         return false;
 	    }
 	    
 	    
+	    
+	    //CUSTOM CONFIG
+	    
 	    private FileConfiguration customConfig = null;
 	    private File customConfigFile = null;
 	 
 	    public void reloadCustomConfig() {
-	        if (customConfigFile == null) {
 	        customConfigFile = new File(getDataFolder() + "/users", userConfig + ".yml");
+	        if (customConfigFile == null) {
+	        //customConfigFile = new File(getDataFolder() + "/users", userConfig + ".yml");
 	        }
+
 	        customConfig = YamlConfiguration.loadConfiguration(customConfigFile);
-	     
-	        // Look for defaults in the jar
-	        InputStream defConfigStream = this.getResource(userConfig + ".yml");
-	        if (defConfigStream != null) {
-	            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-	            customConfig.setDefaults(defConfig);
-	        }
-	      
-	        userConfig = null;
+	     	      
 	    }
 	 
 	    public FileConfiguration getCustomConfig() {
-	        if (customConfig == null) {
-	            reloadCustomConfig();
-	        }
-	        userConfig = null;
+	        reloadCustomConfig();
 	        return customConfig;
 	    }
 	 
 	    public void saveCustomConfig() {
+	        customConfigFile = new File(getDataFolder() + "/users", userConfig + ".yml");
 	        if (customConfig == null || customConfigFile == null) {
 	            return;
 	        }
 	        try {
+	        	customConfigFile = new File(getDataFolder() + "/users", userConfig + ".yml");
 	            getCustomConfig().save(customConfigFile);
+	            
 	        } catch (IOException ex) {
 	            this.getLogger().log(Level.SEVERE, "Could not save config to " + customConfigFile, ex);
+	           
 	        }
-	        userConfig = null;
 	    }
 	    
 	    public void saveDefaultConfig() {
 	        if (customConfigFile == null) {
 	            customConfigFile = new File(getDataFolder() + "/users", userConfig + ".yml");
+	            
 	        }
 	        if (!customConfigFile.exists()) {            
-	             saveResource(userConfig + ".yml", false);
+	             saveResource("/users" + userConfig + ".yml", false);
+	             
 	         }
-	        userConfig = null;
 	    }
 
 }
