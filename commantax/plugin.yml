@@ -22,3 +22,18 @@ commands:
       usage: /kill <name>
       permission: MoarCommands.kill
       permission-message: You don't have <permission>
+   day:
+      description: Sets time to day.
+      usage: /day
+      permission: MoarCommands.day
+      permission-message: You don't have <permission>
+   night:
+      description: Sets time to night.
+      usage: /night
+      permission: MoarCommands.night
+      permission-message: You don't have <permission>
+   gm:
+      description: Sets time to night.
+      usage: /gm <1, 0>
+      permission: MoarCommands.gm
+      permission-message: You don't have <permission>

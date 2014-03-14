@@ -15,6 +15,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 
@@ -26,7 +27,6 @@ public class main extends JavaPlugin implements Listener  {
 	
 String userConfig = null; //ONLY use to determine file path for player config.yml.
 						  //SHOULD NOT be used to set another variable.
-						  //ALWAYS reset to null after a function is done using it.
 	    
 //-----Start onEnable
 @Override
@@ -86,7 +86,7 @@ public boolean onCommand(CommandSender sender, Command cmd, String label, String
 		}
 		return true;
 	} else if (cmd.getName().equalsIgnoreCase("nick")) {
-		if (!(sender instanceof Player)) { 
+		if (!(sender instanceof Player)) {
 			sender.sendMessage("This command can only be run by a player.");
 			//Going to get rid of instance check because 
 			//the console may wish to remove a players' nickname.
@@ -104,16 +104,17 @@ public boolean onCommand(CommandSender sender, Command cmd, String label, String
         		Player player = (Player) sender;
         		String senderName = player.getName();
         		userConfig = senderName;
+        		getCustomConfig().get("nickname");
 
         		player.setDisplayName(args[0]);
         		String displayName = player.getDisplayName(); 
         		
         		sender.sendMessage("your new name is: " + displayName);
         		sender.sendMessage(sender.getName() + ", " + args[0]);
-        		this.getCustomConfig().set("nickname", displayName);
-        		this.saveCustomConfig();		
+        		getCustomConfig().set("nickname", displayName);
+        		saveCustomConfig();		
 			}
-    		userConfig = null;
+
 		}
 		return true;
 	} else if (cmd.getName().equalsIgnoreCase("bannick")) { 
@@ -130,9 +131,42 @@ public boolean onCommand(CommandSender sender, Command cmd, String label, String
 		String killName = args[0];
 		Player playerToKill = Bukkit.getPlayer(killName);
 		playerToKill.sendRawMessage("You have been killed by a waffle.");
-		Bukkit.getServer().broadcastMessage(ChatColor.BLUE + playerToKill.getName() + "GOT KILLED BY A WAFFLE!");
+		Bukkit.getServer().broadcastMessage(ChatColor.BLUE + playerToKill.getName() + " GOT KILLED BY A WAFFLE!");
 		playerToKill.setHealth(0);
 		
+		
+		return true;
+	} else if (cmd.getName().equalsIgnoreCase("day")) { 
+		Player player = (Player) sender;
+		String playerLoc = player.getWorld().getName();
+		Bukkit.getServer().getWorld(playerLoc).setTime(0);
+		Bukkit.getServer().broadcastMessage(ChatColor.LIGHT_PURPLE + sender.getName() + " set the time to day in world: " + playerLoc);
+		
+		return true;
+	} else if (cmd.getName().equalsIgnoreCase("night")) { 
+		Player player = (Player) sender;
+		String playerLoc = player.getWorld().getName();
+		Bukkit.getServer().getWorld(playerLoc).setTime(14000);
+		Bukkit.getServer().broadcastMessage(ChatColor.DARK_PURPLE + sender.getName() + " set the time to night in world: " + playerLoc);
+		
+		return true;
+	} else if (cmd.getName().equalsIgnoreCase("gm")) {
+		Player player = (Player) sender;
+		String stringMode = "1";
+		if(args[0] == "0") {
+			stringMode = "SURVIVAL";
+		} else if (args[0] == "1") {
+			stringMode = "CREATIVE";
+		} else if (args[0] == "2") {
+			stringMode = "ADVENTURE";
+		} else {
+
+			sender.sendMessage("Something went wrong, make sure you type 0, 1, or 2");
+			sender.sendMessage(stringMode);
+		}
+		sender.sendMessage(stringMode);
+		GameMode modeVal = GameMode.valueOf(stringMode);
+		player.setGameMode(modeVal);
 		
 		return true;
 	}
