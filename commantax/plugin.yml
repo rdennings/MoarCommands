@@ -1,39 +1,29 @@
 name: MoarCommands
 main: com.rdennings.bkplug.main
-version: 0.1a
+version: 0.2b
 commands:
    getworld:
       description: Will return the name of the world you are in.
       usage: /getworld
       permission: MoarCommands.getworld
       permission-message: You don't have <permission>
-   nick:
-      description: Change your nickname to that of your choice.
-      usage: /nick <DESIRED NICK>
-      permission: MoarCommands.nick
-      permission-message: You don't have <permission>
-   bannick:
-      description: Searches nickname database, then bans the user that the nickname belongs to.
-      usage: /bannick <nickname>
-      permission: MoarCommands.ban
-      permission-message: You don't have <permission>
-   kill:
-      description: Sends a waffle agent to kill the player.
-      usage: /kill <name>
-      permission: MoarCommands.kill
-      permission-message: You don't have <permission>
    day:
-      description: Sets time to day.
+      description: Sets the time to day in your current world.
       usage: /day
-      permission: MoarCommands.day
+      permission: MoarCommands.time
       permission-message: You don't have <permission>
    night:
-      description: Sets time to night.
+      description: Sets the time to night in your current world.
       usage: /night
-      permission: MoarCommands.night
+      permission: MoarCommands.time
       permission-message: You don't have <permission>
    gm:
-      description: Sets time to night.
-      usage: /gm <1, 0>
+      description: Changes your gamemode
+      usage: /gm <0; 1; 2; creative; survival; adventure>
       permission: MoarCommands.gm
+      permission-message: You don't have <permission>
+   rape:
+      description: Rapes the said player.
+      usage: /rape (player)
+      permission: MoarCommands.rape
       permission-message: You don't have <permission>
